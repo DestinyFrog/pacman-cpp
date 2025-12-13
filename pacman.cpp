@@ -2,8 +2,8 @@
 
 #include <SDL2/SDL.h>
 
-#include "tilemap.cpp"
-#include "sdl_texture_graphics.cpp"
+#include "tilemap.h"
+#include "sdl_texture_graphics.h"
 
 int main() {
     SDL_Window* window;
@@ -20,20 +20,20 @@ int main() {
     const int height = tilemap.get_height();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cout << "Error initializing: " << SDL_GetError() << std::endl;
+        std::cerr << "Error initializing: " << SDL_GetError() << std::endl;
         return EXIT_FAILURE;
     }
 
     window = SDL_CreateWindow("PACMAN", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
     if (window == NULL) {
-        std::cout << "Error creating window: " << SDL_GetError() << std::endl;
+        std::cerr << "Error creating window: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return EXIT_FAILURE;
     }
 
     render = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (render == NULL) {
-        std::cout << "Error creating renderer: " << SDL_GetError() << std::endl;
+        std::cerr << "Error creating renderer: " << SDL_GetError() << std::endl;
         SDL_DestroyWindow(window);
         SDL_Quit();
         return EXIT_FAILURE;
@@ -41,7 +41,7 @@ int main() {
 
     SDL_Texture_Graphics texture = SDL_Texture_Graphics(render, width, height);
     if (!texture.start()) {
-        std::cout << "Failed to initialize texture graphics" << std::endl;
+        std::cerr << "Failed to initialize texture graphics" << std::endl;
         SDL_DestroyRenderer(render);
         SDL_DestroyWindow(window);
         SDL_Quit();
