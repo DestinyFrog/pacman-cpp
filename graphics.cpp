@@ -61,3 +61,42 @@ void Graphics::rect( int x, int y, int lx, int ly ) {
     vline( y, x, x + lx );
     vline( y + ly, x, x + lx );
 }
+
+void Graphics::circle( int x, int y, int radius ) {
+    int distance;
+    double angle, dx, dy;
+
+    for (int px = x - radius; px < x + radius; px++) {
+        for (int py = y - radius; py < y + radius; py++) {
+            dx = px - x;
+            dy = py - y;
+            distance = sqrt(pow(dx, 2) + pow(dy, 2));
+            if (distance < radius)
+                pixel(px, py);
+        }
+    }
+}
+
+void Graphics::circle( int x, int y, int radius, int from, int arc_angle ) {
+    int distance;
+    double angle, dx, dy;
+
+    double radians_from = to_rad(from);
+    double radians_to = to_rad((from + arc_angle) % 360);
+
+    for (int px = x - radius; px < x + radius; px++) {
+        for (int py = y - radius; py < y + radius; py++) {
+            dx = px - x;
+            dy = py - y;
+
+            distance = sqrt(pow(dx, 2) + pow(dy, 2));
+            angle = atan2(dy, dx);
+
+            if (distance < radius)
+                if (radians_to > radians_from
+                        ? (angle > radians_from && angle < radians_to)
+                        : (angle < radians_to && angle > radians_from))
+                    pixel(px, py);
+        }
+    }
+}

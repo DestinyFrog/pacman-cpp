@@ -19,55 +19,49 @@ int Tilemap::get_height() {
     return unit * cols;
 }
 
-bool Tilemap::start( const char* filename ) {
+bool Tilemap::start(const char* filename) {
     std::ifstream f(filename);
-
     if (!f.is_open()) {
         std::cerr << "Erro ao abrir o arquivo!" << std::endl;
         return true;
     }
 
-    char c;
-    do {
-        c = f.get();
+    std::vector<std::string> lines;
+    std::string line;
+    while (std::getline(f, line)) {
+        if (!line.empty() && line.back() == '\r') {
+            line.pop_back();
+        }
+        lines.push_back(line);
+    }
 
-        if (c == '\n')
-            rows++;
+    if (lines.empty()) {
+        std::cerr << "Arquivo vazio!" << std::endl;
+        return true;
+    }
 
-        if (rows == 0)
-            cols++;
-    } while(c);
-    rows++;
+    rows = lines.size();
+    cols = lines[0].size();
 
-    f.seekg(0);
-
-    Tilemap* tilemap = (Tilemap*) malloc( sizeof(Tilemap) );
-
-    matrix = (Tile**) malloc( sizeof(Tile*) * rows );
-    if (matrix == NULL) {
-        std::cerr << "Error allocation matrix\n" << std::endl;
+    matrix = (Tile**) malloc(sizeof(Tile*) * rows);
+    if (!matrix) {
+        std::cerr << "Erro ao alocar matriz!" << std::endl;
         return true;
     }
 
     for (int i = 0; i < rows; i++) {
-        matrix[i] = (Tile*) malloc( sizeof(Tile) * cols );
-        if (tilemap->matrix[i] == NULL) {
-            std::cerr << "Error allocation matrix row" << std::endl;
-            for (int j = 0; j < i; j++) {
-                free(matrix[j]);
-            }
+        matrix[i] = (Tile*) malloc(sizeof(Tile) * cols);
+        if (!matrix[i]) {
+            for (int j = 0; j < i; j++) free(matrix[j]);
             free(matrix);
-            f.close();
             return true;
         }
     }
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            c = f.get();
-            matrix[i][j] = char_to_tile(c);
+            matrix[i][j] = char_to_tile(lines[i][j]);
         }
-        f.get();
     }
 
     f.close();
@@ -79,8 +73,4 @@ void Tilemap::close() {
         free(matrix[i]);
 
     free(matrix);
-}
-
-Tilemap::~Tilemap() {
-    close();
 }

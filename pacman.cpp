@@ -1,8 +1,10 @@
+#include <iostream>
 #include <cstdlib>
 
 #include <SDL2/SDL.h>
 
 #include "tilemap.h"
+#include "sdl_graphics.h"
 #include "sdl_texture_graphics.h"
 
 int main() {
@@ -49,6 +51,7 @@ int main() {
     }
 
     texture.lock();
+    texture.color( 0x0000FFFF );
     for (int i = 0; i < tilemap.rows; i++) {
         for (int j = 0; j < tilemap.cols; j++) {
             if (tilemap.matrix[i][j] == WALL)
@@ -66,11 +69,13 @@ int main() {
             if (j > 0 && tilemap.matrix[i][j - 1] == WALL)
                 texture.line( x, y, x, y + unit );
 
-            if (j < tilemap.cols - 1  && tilemap.matrix[i][j + 1] == WALL)
+            if (j < tilemap.cols - 1 && tilemap.matrix[i][j + 1] == WALL)
                 texture.line( x + unit, y, x + unit, y + unit);
         }
     }
     texture.unlock();
+
+    SDL_Graphics g(render, width, height);
 
     while (running) {
         while (SDL_PollEvent(&window_event)) {
@@ -82,6 +87,9 @@ int main() {
         SDL_RenderClear(render);
 
         texture.paint();
+
+        SDL_SetRenderDrawColor(render, 255, 255, 0, 255);
+        g.circle( 100, 100, unit * 2, 45, 270 );
 
         SDL_RenderPresent(render);
         SDL_Delay(16);

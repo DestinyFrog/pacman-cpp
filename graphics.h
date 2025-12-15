@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cmath>
 
+#include "util.h"
+
 using namespace std;
 
 class Graphics {    
@@ -21,6 +23,8 @@ class Graphics {
     void line( int ax, int ay, int bx, int by );
     void square( int x, int y, int l );
     void rect( int x, int y, int lx, int ly );
+    void circle( int x, int y, int radius );
+    void circle( int x, int y, int radius, int from, int to );
 };
 
 #endif // GRAPHICS_H_

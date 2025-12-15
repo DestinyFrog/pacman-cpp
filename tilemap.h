@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <vector>
 
 #include <SDL2/SDL.h>
 
@@ -23,7 +24,6 @@ class Tilemap {
 
     public:
     Tilemap( int unit );
-    ~Tilemap();
 
     int get_width();
     int get_height();
