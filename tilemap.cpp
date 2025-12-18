@@ -3,20 +3,17 @@
 Tile Tilemap::char_to_tile(char c) {
     switch (c) {
         case '#': return WALL;
+        case 'A': return PACMAN;
         default: return EMPTY;
     }
 }
 
-Tilemap::Tilemap( int unit ) {
-    this->unit = unit;
-}
-
 int Tilemap::get_width() {
-    return unit * rows;
+    return UNIT * rows;
 }
 
 int Tilemap::get_height() {
-    return unit * cols;
+    return UNIT * cols;
 }
 
 bool Tilemap::start(const char* filename) {
@@ -73,4 +70,33 @@ void Tilemap::close() {
         free(matrix[i]);
 
     free(matrix);
+}
+
+bool Tilemap::paint(SDL_Texture_Graphics* texture) {
+    (*texture).lock();
+    (*texture).color( 0x0000FFFF );
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (matrix[i][j] == WALL)
+                continue;
+
+            int x = UNIT * j;
+            int y = UNIT * i;
+
+            if (i > 0 && matrix[i - 1][j] == WALL)
+                (*texture).line( x, y, x + UNIT, y );
+
+            if (i < rows - 1  && matrix[i + 1][j] == WALL)
+                (*texture).line( x, y + UNIT, x + UNIT, y + UNIT);
+
+            if (j > 0 && matrix[i][j - 1] == WALL)
+                (*texture).line( x, y, x, y + UNIT );
+
+            if (j < cols - 1 && matrix[i][j + 1] == WALL)
+                (*texture).line( x + UNIT, y, x + UNIT, y + UNIT);
+        }
+    }
+    (*texture).unlock();
+
+    return false;
 }

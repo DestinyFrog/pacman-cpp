@@ -11,7 +11,8 @@ class SDL_Graphics : public Graphics {
 
     public:
     SDL_Graphics( SDL_Renderer* render, int width, int height );
-    void pixel( int x, int y ) ;
+    void color( int r, int g, int b, int a );
+    void pixel( int x, int y );
 };
 
 #endif // SDL_GRAPHICS_H_

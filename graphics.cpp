@@ -21,6 +21,10 @@ void Graphics::pixel( int x, int y ) {
     std::cerr << "metodo [pixel] nao implementado" << std::endl;
 }
 
+void Graphics::color( int r, int g, int b, int a ) {
+    std::cerr << "metodo [color] nao implementado" << std::endl;
+}
+
 void Graphics::line( int ax, int ay, int bx, int by ) {
     if (ax == bx)
         return vline( ax, ay, by );
@@ -78,11 +82,9 @@ void Graphics::circle( int x, int y, int radius ) {
 }
 
 void Graphics::circle( int x, int y, int radius, int from, int arc_angle ) {
-    int distance;
-    double angle, dx, dy;
-
-    double radians_from = to_rad(from);
-    double radians_to = to_rad((from + arc_angle) % 360);
+    double angle, distance, dx, dy,
+        radians_from = to_rad(from % 360),
+        radians_to = to_rad((from + arc_angle) % 360);
 
     for (int px = x - radius; px < x + radius; px++) {
         for (int py = y - radius; py < y + radius; py++) {
@@ -91,12 +93,10 @@ void Graphics::circle( int x, int y, int radius, int from, int arc_angle ) {
 
             distance = sqrt(pow(dx, 2) + pow(dy, 2));
             angle = atan2(dy, dx);
+            if (angle < 0) angle += 2 * M_PI;
 
-            if (distance < radius)
-                if (radians_to > radians_from
-                        ? (angle > radians_from && angle < radians_to)
-                        : (angle < radians_to && angle > radians_from))
-                    pixel(px, py);
+            if (distance < radius && angle > radians_from && angle < radians_to)
+                pixel(px, py);
         }
     }
 }

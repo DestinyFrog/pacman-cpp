@@ -20,6 +20,7 @@ class Graphics {
     Graphics( int w, int h );
 
     virtual void pixel( int x, int y );
+    virtual void color( int r, int g, int b, int a );
     void line( int ax, int ay, int bx, int by );
     void square( int x, int y, int l );
     void rect( int x, int y, int lx, int ly );

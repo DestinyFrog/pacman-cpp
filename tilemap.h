@@ -8,14 +8,17 @@
 
 #include <SDL2/SDL.h>
 
+#include "data.h"
+#include "sdl_texture_graphics.h"
+
 typedef enum {
     WALL,
+    PACMAN,
     EMPTY
 } Tile;
 
 class Tilemap {
     public:
-    int unit;
     int rows;
     int cols;
     Tile** matrix;
@@ -23,11 +26,10 @@ class Tilemap {
     Tile char_to_tile(char c);
 
     public:
-    Tilemap( int unit );
-
     int get_width();
     int get_height();
     bool start( const char* filename );
+    bool paint(SDL_Texture_Graphics* texture);
     void close();
 };
 
